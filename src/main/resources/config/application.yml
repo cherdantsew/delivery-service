@@ -1,0 +1,15 @@
+spring:
+  liquibase:
+    change-log: classpath:config/liquibase/master.xml
+    contexts: schema
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/users
+    username: postgres
+    password: postgres
+security:
+  authentication:
+    jwt:
+      secret: br8dMKkzJk9Y5QPcYbBGcKngJtC3cdGK4sJwuzgc
+      # 24 hours
+      token-validity-in-seconds: 360000
