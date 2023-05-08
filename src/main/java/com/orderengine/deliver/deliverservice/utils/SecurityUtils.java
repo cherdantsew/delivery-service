@@ -1,7 +1,6 @@
-package com.orderengine.user.utils;
+package com.orderengine.deliver.deliverservice.utils;
 
-import com.orderengine.user.model.enumeration.RolesConstants;
-import org.apache.commons.collections4.CollectionUtils;
+import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

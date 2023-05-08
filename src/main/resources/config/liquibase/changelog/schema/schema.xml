@@ -3,10 +3,5 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <include file="config/liquibase/changelog/schema/create_table_roles.sql" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/schema/insert_roles_into_roles_table.sql" relativeToChangelogFile="false" />
-    <include file="/config/liquibase/changelog/schema/create_table_users.sql" relativeToChangelogFile="false" />
-    <include file="/config/liquibase/changelog/schema/create_table_user_role.sql" relativeToChangelogFile="false" />
-    <include file="/config/liquibase/changelog/schema/insert_admin_to_users.sql" relativeToChangelogFile="false" />
-    <include file="/config/liquibase/changelog/schema/update_roles.sql" relativeToChangelogFile="false" />
+    <include file="/config/liquibase/changelog/schema/update_roles.sql" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -1,7 +1,6 @@
-package com.orderengine.user.utils;
+package com.orderengine.deliver.deliverservice.utils;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
 import java.util.Map;

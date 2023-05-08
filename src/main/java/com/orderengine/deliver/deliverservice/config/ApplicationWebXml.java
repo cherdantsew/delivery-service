@@ -1,7 +1,7 @@
-package com.orderengine.user.config;
+package com.orderengine.deliver.deliverservice.config;
 
-import com.orderengine.user.UserApplication;
-import com.orderengine.user.utils.DefaultProfileUtil;
+import com.orderengine.deliver.deliverservice.DeliverServiceApplication;
+import com.orderengine.deliver.deliverservice.utils.DefaultProfileUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
@@ -17,6 +17,6 @@ public class ApplicationWebXml extends SpringBootServletInitializer {
          * set a default to use when no profile is configured.
          */
         DefaultProfileUtil.addDefaultProfile(application.application());
-        return application.sources(UserApplication.class);
+        return application.sources(DeliverServiceApplication.class);
     }
 }

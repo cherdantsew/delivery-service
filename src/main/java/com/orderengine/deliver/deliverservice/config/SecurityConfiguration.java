@@ -1,6 +1,6 @@
-package com.orderengine.user.config;
+package com.orderengine.deliver.deliverservice.config;
 
-import com.orderengine.user.model.enumeration.RolesConstants;
+import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

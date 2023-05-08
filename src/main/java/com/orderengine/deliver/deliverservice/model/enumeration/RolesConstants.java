@@ -1,4 +1,4 @@
-package com.orderengine.user.model.enumeration;
+package com.orderengine.deliver.deliverservice.model.enumeration;
 
 public enum RolesConstants {
     ROLE_USER,

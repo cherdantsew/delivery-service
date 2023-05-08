@@ -1,4 +1,4 @@
-package com.orderengine.user.config;
+package com.orderengine.deliver.deliverservice.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

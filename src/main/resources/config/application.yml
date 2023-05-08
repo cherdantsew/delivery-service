@@ -4,7 +4,7 @@ spring:
     contexts: schema
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/users
+    url: jdbc:postgresql://localhost:5432/order
     username: postgres
     password: postgres
 security:

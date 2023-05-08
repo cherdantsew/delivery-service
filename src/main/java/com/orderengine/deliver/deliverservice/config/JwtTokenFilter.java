@@ -1,4 +1,4 @@
-package com.orderengine.user.config;
+package com.orderengine.deliver.deliverservice.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

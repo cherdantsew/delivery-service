@@ -1,6 +1,6 @@
-package com.orderengine.user.converter.enums;
+package com.orderengine.deliver.deliverservice.enums;
 
-import com.orderengine.user.model.enumeration.RolesConstants;
+import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

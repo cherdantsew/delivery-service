@@ -1,4 +1,4 @@
-package com.orderengine.user.config;
+package com.orderengine.deliver.deliverservice.config;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
