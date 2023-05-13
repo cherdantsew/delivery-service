@@ -1,0 +1,1 @@
+create or replace view delivery_orders_couriers_view

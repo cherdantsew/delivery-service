@@ -3,5 +3,10 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <include file="/config/liquibase/changelog/schema/update_roles.sql" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/schema/create_users_table.sql" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/schema/create_couriers_table.sql" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/schema/create_parcel_delivery_order_table.sql"
+             relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/schema/delivery_orders_couriers_view.sql"
+             relativeToChangelogFile="false"/>
 </databaseChangeLog>
