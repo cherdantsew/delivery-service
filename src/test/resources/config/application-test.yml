@@ -1,0 +1,13 @@
+spring:
+  test:
+    database:
+      replace: none
+  liquibase:
+    change-log: classpath:config/liquibase/master.xml
+    contexts: schema
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none

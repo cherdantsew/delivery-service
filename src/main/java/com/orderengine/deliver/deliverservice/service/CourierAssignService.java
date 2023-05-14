@@ -2,8 +2,8 @@ package com.orderengine.deliver.deliverservice.service;
 
 import com.orderengine.deliver.deliverservice.model.entity.Courier;
 import com.orderengine.deliver.deliverservice.model.entity.DeliveryOrder;
-import com.orderengine.deliver.deliverservice.model.entity.WaitingForCourierAssignOrder;
 import com.orderengine.deliver.deliverservice.model.enumeration.CourierStatus;
+import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ public class CourierAssignService {
         this.deliveryOrderService = deliveryOrderService;
     }
 
+
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void tryAssignCourierToOrders() {
@@ -38,7 +39,8 @@ public class CourierAssignService {
             if (unassignedOrders.isEmpty())
                 return;
             DeliveryOrder unassignedOrder = unassignedOrders.get(0);
-            unassignedOrder.setCourierId(freeCourier.getId());
+            unassignedOrder.setCourier(freeCourier);
+            unassignedOrder.setOrderStatus(OrderStatus.COURIER_ASSIGNED);
             freeCourier.setCourierStatus(CourierStatus.BUSY);
             deliveryOrderService.save(unassignedOrder);
             courierService.save(freeCourier);

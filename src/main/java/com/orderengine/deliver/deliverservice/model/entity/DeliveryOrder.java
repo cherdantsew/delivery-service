@@ -3,20 +3,11 @@ package com.orderengine.deliver.deliverservice.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderRequestDto;
 import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -34,8 +25,9 @@ public class DeliveryOrder {
     private Long id;
     @Column(name = "user_login")
     private String userLogin;
-    @Column(name = "courier_id")
-    private Long courierId;
+    @OneToOne
+    @JoinColumn(name = "courier_id", referencedColumnName = "id")
+    private Courier courier;
     @Column(name = "destination")
     private String destination;
     @Column(name = "order_status")
@@ -46,13 +38,16 @@ public class DeliveryOrder {
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "delivered_at")
     private LocalDateTime deliveredAt;
+    @Column(name = "delivery_cost")
+    private BigDecimal deliveryCost;
 
     public static DeliveryOrder fromRequestDto(DeliveryOrderRequestDto dto) {
         return DeliveryOrder.builder()
-            .userLogin(dto.getUserLogin())
-            .destination(dto.getDestination())
-            .orderStatus(OrderStatus.CREATED)
-            .createdAt(LocalDateTime.now())
-            .build();
+                .userLogin(dto.getUserLogin())
+                .destination(dto.getDestination())
+                .orderStatus(OrderStatus.CREATED)
+                .createdAt(LocalDateTime.now())
+                .deliveryCost(dto.getDeliveryCost())
+                .build();
     }
 }
