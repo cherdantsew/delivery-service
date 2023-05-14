@@ -1,23 +1,33 @@
 package com.orderengine.deliver.deliverservice.service;
 
 import com.orderengine.deliver.deliverservice.exception.http.BadRequestException;
+import com.orderengine.deliver.deliverservice.exception.http.UnauthorizedException;
 import com.orderengine.deliver.deliverservice.model.dto.ChangeDeliveryDestinationRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;
 import com.orderengine.deliver.deliverservice.model.entity.DeliveryOrder;
+import com.orderengine.deliver.deliverservice.model.entity.User;
 import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
+import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import com.orderengine.deliver.deliverservice.repository.DeliveryOrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DeliveryOrderService {
 
     private final DeliveryOrderRepository repository;
+    private final UserService userService;
 
-    public DeliveryOrderService(DeliveryOrderRepository repository) {
+    public DeliveryOrderService(
+            DeliveryOrderRepository repository,
+            UserService userService
+    ) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     public void createDeliveryOrder(DeliveryOrderRequestDto requestDto) {
@@ -45,10 +55,21 @@ public class DeliveryOrderService {
         return repository.findDeliveryOrderById(orderId, currentUserLogin).orElseThrow();
     }
 
-    public DeliveryOrderResponseDto cancelDeliveryOrder(Long orderId, String currentUserLogin) {
+    @Transactional
+    public void cancelDeliveryOrder(Long orderId, String currentUserLogin, RolesConstants currentUserRole) {
         DeliveryOrder deliveryOrder = repository.findById(orderId).orElseThrow();
-        if (deliveryOrder.getCourier() != null)
-            deliveryOrder.setOrderStatus(OrderStatus.CANCELLED);
+        if (deliveryOrder.getCourier() != null && OrderStatus.DELIVER_IN_PROGRESS == deliveryOrder.getOrderStatus()) {
+            throw new BadRequestException("Delivery is in progress. Too late to cancel delivery order.");
+        }
+
+        if (!Objects.equals(currentUserLogin, deliveryOrder.getUserLogin()) || RolesConstants.ROLE_ADMIN != currentUserRole) {
+            throw new UnauthorizedException("You have no permission to cancel this order.");
+        }
+
+        deliveryOrder.setOrderStatus(OrderStatus.CANCELLED);
+        User user = userService.getByLogin(deliveryOrder.getUserLogin());
+        user.setAccountBalance(user.getAccountBalance().add(deliveryOrder.getDeliveryCost()));
         repository.save(deliveryOrder);
+        userService.save(user);
     }
 }

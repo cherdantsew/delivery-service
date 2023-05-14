@@ -1,6 +1,7 @@
 package com.orderengine.deliver.deliverservice.model.dto;
 
 import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@Builder
 public class DeliveryOrderResponseDto {
     private String userLogin;
     private BigDecimal deliveryCost;
@@ -29,4 +31,5 @@ public class DeliveryOrderResponseDto {
         this.courierLogin = courierLogin;
         this.courierContactInfo = courierContactInfo;
     }
+
 }

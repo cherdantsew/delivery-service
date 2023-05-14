@@ -19,7 +19,7 @@ import java.util.Objects;
 @RestController("/user/order-service/delivery-order")
 public class DeliveryOrderController {
 
-    private DeliveryOrderService deliveryOrderService;
+    private final DeliveryOrderService deliveryOrderService;
 
     public DeliveryOrderController(DeliveryOrderService deliveryOrderService) {
         this.deliveryOrderService = deliveryOrderService;
@@ -31,10 +31,10 @@ public class DeliveryOrderController {
     }
 
     @PutMapping("/{orderId}/cancel")
-    public DeliveryOrderResponseDto cancelDeliveryOrder(@PathVariable Long orderId) {
-        return deliveryOrderService.cancelDeliveryOrder(orderId, SecurityUtils.currentUserLoginOrException());
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelDeliveryOrder(@PathVariable Long orderId) {
+        deliveryOrderService.cancelDeliveryOrder(orderId, SecurityUtils.currentUserLoginOrException(), SecurityUtils.currentRole());
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
