@@ -1,9 +1,10 @@
 package com.orderengine.deliver.deliverservice.service;
 
-import com.orderengine.deliver.deliverservice.mapper.DeliveryOrderMapper;
 import com.orderengine.deliver.deliverservice.exception.http.BadRequestException;
 import com.orderengine.deliver.deliverservice.exception.http.UnauthorizedException;
+import com.orderengine.deliver.deliverservice.mapper.DeliveryOrderMapper;
 import com.orderengine.deliver.deliverservice.model.dto.ChangeDeliveryDestinationRequestDto;
+import com.orderengine.deliver.deliverservice.model.dto.ChangeOrderStatusRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderDetailsResponseDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;
@@ -81,5 +82,19 @@ public class DeliveryOrderService {
 
     public List<DeliveryOrderResponseDto> findAllByUserLogin(String currentUserLogin) {
         return mapper.toDto(repository.findAllByUserLogin(currentUserLogin));
+    }
+
+    public List<DeliveryOrderResponseDto> findAll() {
+        return mapper.toDto(repository.findAll());
+    }
+
+    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto) {
+        DeliveryOrder deliveryOrder = repository.findById(requestDto.getOrderId()).orElseThrow();
+        deliveryOrder.setOrderStatus(requestDto.getOrderStatus());
+        return mapper.toDto(repository.saveAndFlush(deliveryOrder));
+    }
+
+    public DeliveryOrder findById(Long orderId) {
+        return repository.findById(orderId).orElseThrow();
     }
 }

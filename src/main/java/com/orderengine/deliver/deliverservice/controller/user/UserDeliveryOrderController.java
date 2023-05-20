@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController("/user/order-service/delivery-order")
-public class DeliveryOrderController {
+public class UserDeliveryOrderController {
 
     private final DeliveryOrderService deliveryOrderService;
 
-    public DeliveryOrderController(DeliveryOrderService deliveryOrderService) {
+    public UserDeliveryOrderController(DeliveryOrderService deliveryOrderService) {
         this.deliveryOrderService = deliveryOrderService;
     }
 
