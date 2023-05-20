@@ -1,6 +1,6 @@
 package com.orderengine.deliver.deliverservice.repository;
 
-import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;
+import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderDetailsResponseDto;
 import com.orderengine.deliver.deliverservice.model.entity.DeliveryOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,8 +14,10 @@ import java.util.Optional;
 public interface DeliveryOrderRepository extends JpaRepository<DeliveryOrder, Long> {
     List<DeliveryOrder> findAllByCourierIdIsNull();
 
+    List<DeliveryOrder> findAllByUserLogin(String userLogin);
+
     @Query("""
-            select new com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto(
+            select new com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderDetailsResponseDto(
             pdo.userLogin,
             pdo.deliveryCost,
             pdo.destination,
@@ -29,5 +31,6 @@ public interface DeliveryOrderRepository extends JpaRepository<DeliveryOrder, Lo
             where pdo.userLogin = :userLogin
             and pdo.id = :orderId
             """)
-    Optional<DeliveryOrderResponseDto> findDeliveryOrderById(@Param("orderId") Long orderId, @Param("userLogin") String userLogin);
+    Optional<DeliveryOrderDetailsResponseDto> findDeliveryOrderById(@Param("orderId") Long orderId, @Param("userLogin") String userLogin);
+
 }

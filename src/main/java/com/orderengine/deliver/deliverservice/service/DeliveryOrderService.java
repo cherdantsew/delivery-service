@@ -1,8 +1,10 @@
 package com.orderengine.deliver.deliverservice.service;
 
+import com.orderengine.deliver.deliverservice.mapper.DeliveryOrderMapper;
 import com.orderengine.deliver.deliverservice.exception.http.BadRequestException;
 import com.orderengine.deliver.deliverservice.exception.http.UnauthorizedException;
 import com.orderengine.deliver.deliverservice.model.dto.ChangeDeliveryDestinationRequestDto;
+import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderDetailsResponseDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;
 import com.orderengine.deliver.deliverservice.model.entity.DeliveryOrder;
@@ -10,24 +12,26 @@ import com.orderengine.deliver.deliverservice.model.entity.User;
 import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
 import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import com.orderengine.deliver.deliverservice.repository.DeliveryOrderRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Objects;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DeliveryOrderService {
 
     private final DeliveryOrderRepository repository;
     private final UserService userService;
+    private final DeliveryOrderMapper mapper;
 
     public DeliveryOrderService(
             DeliveryOrderRepository repository,
-            UserService userService
+            UserService userService,
+            DeliveryOrderMapper mapper
     ) {
         this.repository = repository;
         this.userService = userService;
+        this.mapper = mapper;
     }
 
     public void createDeliveryOrder(DeliveryOrderRequestDto requestDto) {
@@ -44,6 +48,7 @@ public class DeliveryOrderService {
 
     public void changeOrderDestination(ChangeDeliveryDestinationRequestDto requestDto) {
         DeliveryOrder deliveryOrder = repository.findById(requestDto.getOrderId()).orElseThrow();
+        //if courier already delivers parcel
         if (deliveryOrder.getCourier() != null && OrderStatus.DELIVER_IN_PROGRESS == deliveryOrder.getOrderStatus()) {
             throw new BadRequestException("Delivery is in progress. Too late to change delivery address.");
         }
@@ -51,13 +56,14 @@ public class DeliveryOrderService {
         repository.save(deliveryOrder);
     }
 
-    public DeliveryOrderResponseDto getDeliveryOrderById(Long orderId, String currentUserLogin) {
+    public DeliveryOrderDetailsResponseDto getDeliveryOrderById(Long orderId, String currentUserLogin) {
         return repository.findDeliveryOrderById(orderId, currentUserLogin).orElseThrow();
     }
 
     @Transactional
     public void cancelDeliveryOrder(Long orderId, String currentUserLogin, RolesConstants currentUserRole) {
         DeliveryOrder deliveryOrder = repository.findById(orderId).orElseThrow();
+        //if courier already delivers order
         if (deliveryOrder.getCourier() != null && OrderStatus.DELIVER_IN_PROGRESS == deliveryOrder.getOrderStatus()) {
             throw new BadRequestException("Delivery is in progress. Too late to cancel delivery order.");
         }
@@ -71,5 +77,9 @@ public class DeliveryOrderService {
         user.setAccountBalance(user.getAccountBalance().add(deliveryOrder.getDeliveryCost()));
         repository.save(deliveryOrder);
         userService.save(user);
+    }
+
+    public List<DeliveryOrderResponseDto> findAllByUserLogin(String currentUserLogin) {
+        return mapper.toDto(repository.findAllByUserLogin(currentUserLogin));
     }
 }
