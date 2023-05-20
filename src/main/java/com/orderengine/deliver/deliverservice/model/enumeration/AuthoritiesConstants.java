@@ -10,7 +10,8 @@ public enum AuthoritiesConstants implements GrantedAuthority {
     ASSIGN_PARCEL_DELIVERY_ORDER,
     CHANGE_DELIVERY_DESTINATION,
     CHANGE_DELIVERY_STATUS,
-    CANCEL_DELIVERY_ORDER;
+    CANCEL_DELIVERY_ORDER,
+    VIEW_ALL_COURIERS;
     @Override
     public String getAuthority() {
         return name();

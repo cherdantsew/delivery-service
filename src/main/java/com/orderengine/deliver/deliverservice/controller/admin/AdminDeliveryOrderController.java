@@ -1,4 +1,4 @@
-package com.orderengine.deliver.deliverservice.controller.user;
+package com.orderengine.deliver.deliverservice.controller.admin;
 
 import com.orderengine.deliver.deliverservice.exception.http.ForbiddenException;
 import com.orderengine.deliver.deliverservice.model.dto.AssignCourierToOrderRequestDto;
