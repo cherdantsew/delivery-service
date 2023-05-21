@@ -1,4 +1,4 @@
-package com.orderengine.deliver.deliverservice.controller.admin;
+package com.orderengine.deliver.deliverservice.controller;
 
 import com.orderengine.deliver.deliverservice.exception.http.UnauthorizedException;
 import com.orderengine.deliver.deliverservice.mapper.CourierMapper;
@@ -22,7 +22,7 @@ public class CourierController {
     }
 
     @GetMapping("/get-all")
-    public List<CourierResponseDto> getAllCouriers(){
+    public List<CourierResponseDto> getAllCouriers() {
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.VIEW_ALL_COURIERS)) {
             throw new UnauthorizedException("You have no permission to view all couriers");
         }

@@ -1,7 +1,6 @@
 package com.orderengine.deliver.deliverservice.service;
 
 import com.orderengine.deliver.deliverservice.mapper.CourierMapper;
-import com.orderengine.deliver.deliverservice.model.dto.CourierResponseDto;
 import com.orderengine.deliver.deliverservice.model.entity.Courier;
 import com.orderengine.deliver.deliverservice.model.enumeration.CourierStatus;
 import com.orderengine.deliver.deliverservice.repository.CourierRepository;

@@ -33,7 +33,7 @@ public interface DeliveryOrderRepository extends JpaRepository<DeliveryOrder, Lo
             where pdo.userLogin = :userLogin
             and pdo.id = :orderId
             """)
-    Optional<DeliveryOrderDetailsResponseDto> findDeliveryOrderByIdAAndUserLogin(@Param("orderId") Long orderId, @Param("userLogin") String userLogin);
+    Optional<DeliveryOrderDetailsResponseDto> findDeliveryOrderByIdAndUserLogin(@Param("orderId") Long orderId, @Param("userLogin") String userLogin);
 
 
 

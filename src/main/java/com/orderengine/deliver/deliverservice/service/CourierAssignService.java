@@ -18,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourierAssignService {
 
     private final CourierService courierService;
-    private final DeliveryOrderService deliveryOrderService;
+    private final CourierDeliveryOrderService deliveryOrderService;
     private final DeliveryOrderMapper deliveryOrderMapper;
 
     public CourierAssignService(
             CourierService courierService,
-            DeliveryOrderService deliveryOrderService,
+            CourierDeliveryOrderService deliveryOrderService,
             DeliveryOrderMapper mapper
     ) {
         this.courierService = courierService;
