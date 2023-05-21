@@ -8,6 +8,7 @@ import com.orderengine.deliver.deliverservice.service.DeliveryOrderService;
 import com.orderengine.deliver.deliverservice.utils.SecurityUtils;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,11 @@ public class CourierDeliveryOrderController {
             DeliveryOrderService deliveryOrderService
     ) {
         this.deliveryOrderService = deliveryOrderService;
+    }
+
+    @GetMapping("/{orderId}")
+    public DeliveryOrderResponseDto getDeliveryOrder(@PathVariable Long orderId) {
+        return deliveryOrderService.findByIdAndCourierLogin(orderId, SecurityUtils.currentUserLoginOrException());
     }
 
     @GetMapping("/get-all")

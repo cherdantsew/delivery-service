@@ -61,6 +61,9 @@ public class DeliveryOrderService {
         return repository.findDeliveryOrderByIdAAndUserLogin(orderId, currentUserLogin).orElseThrow();
     }
 
+    public DeliveryOrderResponseDto findByIdAndCourierLogin(Long orderId, String courierLogin) {
+        return mapper.toDto(repository.findByIdAndCourierLogin(orderId, courierLogin).orElseThrow());
+    }
     public DeliveryOrderDetailsResponseDto getDeliveryOrderByIdAndCourierLogin(Long orderId, String currentUserLogin) {
         return repository.findDeliveryOrderByIdAAndUserLogin(orderId, currentUserLogin).orElseThrow();
     }
