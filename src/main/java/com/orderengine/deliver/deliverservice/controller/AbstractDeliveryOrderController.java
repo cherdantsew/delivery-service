@@ -1,4 +1,4 @@
-package com.orderengine.deliver.deliverservice.controller.admin;
+package com.orderengine.deliver.deliverservice.controller;
 
 import com.orderengine.deliver.deliverservice.mapper.DeliveryOrderMapper;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;

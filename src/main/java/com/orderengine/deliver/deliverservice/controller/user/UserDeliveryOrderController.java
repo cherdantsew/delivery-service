@@ -1,6 +1,6 @@
 package com.orderengine.deliver.deliverservice.controller.user;
 
-import com.orderengine.deliver.deliverservice.controller.admin.AbstractDeliveryOrderController;
+import com.orderengine.deliver.deliverservice.controller.AbstractDeliveryOrderController;
 import com.orderengine.deliver.deliverservice.mapper.DeliveryOrderMapper;
 import com.orderengine.deliver.deliverservice.model.dto.ChangeDeliveryDestinationRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderDetailsResponseDto;
