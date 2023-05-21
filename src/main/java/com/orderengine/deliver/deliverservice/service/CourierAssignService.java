@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CourierAssignService {
 
-    private CourierService courierService;
-    private DeliveryOrderService deliveryOrderService;
-    private DeliveryOrderMapper deliveryOrderMapper;
+    private final CourierService courierService;
+    private final DeliveryOrderService deliveryOrderService;
+    private final DeliveryOrderMapper deliveryOrderMapper;
 
     public CourierAssignService(
             CourierService courierService,
@@ -56,7 +56,7 @@ public class CourierAssignService {
 
     @Transactional
     public DeliveryOrderResponseDto assignCourierToOrder(AssignCourierToOrderRequestDto requestDto) {
-        Courier courier = courierService.findById(requestDto.getCourierId());
+        Courier courier = courierService.findOneById(requestDto.getCourierId());
         if (CourierStatus.BUSY == courier.getCourierStatus()) {
             throw new BadRequestException("You cant assign order to courier as he is delivering an order.");
         }

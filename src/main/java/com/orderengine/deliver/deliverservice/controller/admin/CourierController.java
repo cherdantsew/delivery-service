@@ -1,6 +1,7 @@
 package com.orderengine.deliver.deliverservice.controller.admin;
 
 import com.orderengine.deliver.deliverservice.exception.http.UnauthorizedException;
+import com.orderengine.deliver.deliverservice.mapper.CourierMapper;
 import com.orderengine.deliver.deliverservice.model.dto.CourierResponseDto;
 import com.orderengine.deliver.deliverservice.model.enumeration.AuthoritiesConstants;
 import com.orderengine.deliver.deliverservice.service.CourierService;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourierController {
 
     private final CourierService courierService;
+    private final CourierMapper courierMapper;
 
-    public CourierController(CourierService courierService) {
+    public CourierController(CourierService courierService, CourierMapper courierMapper) {
         this.courierService = courierService;
+        this.courierMapper = courierMapper;
     }
 
     @GetMapping("/get-all")
@@ -23,6 +26,6 @@ public class CourierController {
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.VIEW_ALL_COURIERS)) {
             throw new UnauthorizedException("You have no permission to view all couriers");
         }
-        return courierService.getAllCouriers();
+        return courierMapper.toDto(courierService.findAll());
     }
 }

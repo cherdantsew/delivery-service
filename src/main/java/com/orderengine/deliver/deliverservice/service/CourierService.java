@@ -5,11 +5,12 @@ import com.orderengine.deliver.deliverservice.model.dto.CourierResponseDto;
 import com.orderengine.deliver.deliverservice.model.entity.Courier;
 import com.orderengine.deliver.deliverservice.model.enumeration.CourierStatus;
 import com.orderengine.deliver.deliverservice.repository.CourierRepository;
+import com.orderengine.deliver.deliverservice.service.abstraction.IBaseEntityService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CourierService {
+public class CourierService implements IBaseEntityService<Courier> {
 
     private CourierRepository repository;
     private CourierMapper courierMapper;
@@ -26,15 +27,23 @@ public class CourierService {
         return repository.findAllByCourierStatusIs(status);
     }
 
-    public Courier findById(Long id) {
+    @Override
+    public Courier findOneById(Long id) {
         return repository.findById(id).orElseThrow();
     }
 
-    public void save(Courier courier) {
-        repository.save(courier);
+    @Override
+    public List<Courier> findAll() {
+        return repository.findAll();
     }
 
-    public List<CourierResponseDto> getAllCouriers() {
-        return courierMapper.toDto(repository.findAll());
+    @Override
+    public Courier saveAndFlush(Courier entity) {
+        return repository.saveAndFlush(entity);
+    }
+
+    @Override
+    public void save(Courier entity) {
+        repository.save(entity);
     }
 }
