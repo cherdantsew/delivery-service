@@ -7,6 +7,7 @@ import com.orderengine.deliver.deliverservice.model.entity.DeliveryOrder;
 import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
 import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import com.orderengine.deliver.deliverservice.repository.DeliveryOrderRepository;
+import com.orderengine.deliver.deliverservice.utils.SecurityUtils;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,8 @@ public class CourierDeliveryOrderService extends AbstractDeliveryOrderService {
         );
     }
 
-    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto, String currentCourierLogin, RolesConstants currentRole) {
-        DeliveryOrder deliveryOrder = repository.findByIdAndCourierLogin(requestDto.getOrderId(), currentCourierLogin).orElseThrow();
+    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto) {
+        DeliveryOrder deliveryOrder = repository.findByIdAndCourierLogin(requestDto.getOrderId(), SecurityUtils.currentUserLoginOrException()).orElseThrow();
         deliveryOrder.setOrderStatus(requestDto.getOrderStatus());
         return mapper.toDto(repository.saveAndFlush(deliveryOrder));
     }

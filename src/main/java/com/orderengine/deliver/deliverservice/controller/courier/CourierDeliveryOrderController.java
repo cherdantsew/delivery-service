@@ -37,7 +37,7 @@ public class CourierDeliveryOrderController extends AbstractDeliveryOrderControl
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_STATUS)) {
             throw new ForbiddenException("No permission to view all orders");
         }
-        return deliveryOrderService.changeOrderStatus(requestDto, SecurityUtils.currentUserLoginOrException(), SecurityUtils.currentRole());
+        return deliveryOrderService.changeOrderStatus(requestDto);
     }
 
     @GetMapping("/{orderId}")
