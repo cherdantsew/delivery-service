@@ -5,7 +5,6 @@ import com.orderengine.deliver.deliverservice.model.dto.ChangeOrderStatusRequest
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;
 import com.orderengine.deliver.deliverservice.model.entity.DeliveryOrder;
 import com.orderengine.deliver.deliverservice.model.enumeration.OrderStatus;
-import com.orderengine.deliver.deliverservice.model.enumeration.RolesConstants;
 import com.orderengine.deliver.deliverservice.repository.DeliveryOrderRepository;
 import com.orderengine.deliver.deliverservice.utils.SecurityUtils;
 import java.util.List;
