@@ -57,8 +57,12 @@ public class DeliveryOrderService {
         repository.save(deliveryOrder);
     }
 
-    public DeliveryOrderDetailsResponseDto getDeliveryOrderById(Long orderId, String currentUserLogin) {
-        return repository.findDeliveryOrderById(orderId, currentUserLogin).orElseThrow();
+    public DeliveryOrderDetailsResponseDto getDeliveryOrderByIdAndUserLogin(Long orderId, String currentUserLogin) {
+        return repository.findDeliveryOrderByIdAAndUserLogin(orderId, currentUserLogin).orElseThrow();
+    }
+
+    public DeliveryOrderDetailsResponseDto getDeliveryOrderByIdAndCourierLogin(Long orderId, String currentUserLogin) {
+        return repository.findDeliveryOrderByIdAAndUserLogin(orderId, currentUserLogin).orElseThrow();
     }
 
     @Transactional
@@ -88,13 +92,29 @@ public class DeliveryOrderService {
         return mapper.toDto(repository.findAll());
     }
 
-    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto) {
-        DeliveryOrder deliveryOrder = repository.findById(requestDto.getOrderId()).orElseThrow();
+    //todo переопределить для админаи для курьера, чтобы курьер мог править только свой ордер, а админ-все
+    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto, String currentCourierLogin, RolesConstants currentRole) {
+
+        DeliveryOrder deliveryOrder;
+        if (RolesConstants.ROLE_ADMIN == currentRole) {
+            deliveryOrder = repository.findById(requestDto.getOrderId()).orElseThrow();
+        } else if (RolesConstants.ROLE_COURIER == currentRole) {
+            deliveryOrder = repository.findByIdAndCourierLogin(requestDto.getOrderId(), currentCourierLogin).orElseThrow();
+        } else throw new UnauthorizedException("No permission to change order status");
         deliveryOrder.setOrderStatus(requestDto.getOrderStatus());
         return mapper.toDto(repository.saveAndFlush(deliveryOrder));
     }
 
     public DeliveryOrder findById(Long orderId) {
         return repository.findById(orderId).orElseThrow();
+    }
+
+    public List<DeliveryOrderResponseDto> findAllByCourierLogin(String courierLogin) {
+        return mapper.toDto(
+                repository.findAllByCourierLoginAndOrderStatusNotIn(
+                        courierLogin,
+                        List.of(OrderStatus.DELIVERED, OrderStatus.CANCELLED)
+                )
+        );
     }
 }

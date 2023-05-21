@@ -1,34 +1,31 @@
-package com.orderengine.deliver.deliverservice.controller.admin;
+package com.orderengine.deliver.deliverservice.controller.courier;
 
 import com.orderengine.deliver.deliverservice.exception.http.ForbiddenException;
-import com.orderengine.deliver.deliverservice.model.dto.AssignCourierToOrderRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.ChangeOrderStatusRequestDto;
 import com.orderengine.deliver.deliverservice.model.dto.DeliveryOrderResponseDto;
 import com.orderengine.deliver.deliverservice.model.enumeration.AuthoritiesConstants;
-import com.orderengine.deliver.deliverservice.service.CourierAssignService;
 import com.orderengine.deliver.deliverservice.service.DeliveryOrderService;
 import com.orderengine.deliver.deliverservice.utils.SecurityUtils;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Validated
-@RestController("/admin/order-service/delivery-order")
-public class AdminDeliveryOrderController {
+@RestController("/courier/order-service/delivery-order")
+public class CourierDeliveryOrderController {
 
     private final DeliveryOrderService deliveryOrderService;
 
-    private final CourierAssignService courierAssignService;
-
-    public AdminDeliveryOrderController(
-            DeliveryOrderService deliveryOrderService,
-            CourierAssignService courierAssignService
+    public CourierDeliveryOrderController(
+            DeliveryOrderService deliveryOrderService
     ) {
         this.deliveryOrderService = deliveryOrderService;
-        this.courierAssignService = courierAssignService;
+    }
+
+    @GetMapping("/get-all")
+    public List<DeliveryOrderResponseDto> getAllDeliveryOrders() {
+        return deliveryOrderService.findAllByCourierLogin(SecurityUtils.currentUserLoginOrException());
     }
 
     @PutMapping("/change-status")
@@ -38,18 +35,4 @@ public class AdminDeliveryOrderController {
         }
         return deliveryOrderService.changeOrderStatus(requestDto, SecurityUtils.currentUserLoginOrException(), SecurityUtils.currentRole());
     }
-
-    @GetMapping("/get-all")
-    public List<DeliveryOrderResponseDto> getAllDeliveryOrders() {
-        return deliveryOrderService.findAll();
-    }
-
-    @PutMapping("/assign-courier")
-    public DeliveryOrderResponseDto assignCourier(@RequestBody AssignCourierToOrderRequestDto requestDto) {
-        return courierAssignService.assignCourierToOrder(requestDto);
-    }
-
-    //todo Can track the delivery order by coordinates; what are the coordinates?
-
-
 }

@@ -34,7 +34,7 @@ public class UserDeliveryOrderController {
 
     @GetMapping("/{orderId}")
     public DeliveryOrderDetailsResponseDto getDeliveryOrder(@PathVariable Long orderId) {
-        return deliveryOrderService.getDeliveryOrderById(orderId, SecurityUtils.currentUserLoginOrException());
+        return deliveryOrderService.getDeliveryOrderByIdAndUserLogin(orderId, SecurityUtils.currentUserLoginOrException());
     }
 
     @GetMapping("/get-all")
