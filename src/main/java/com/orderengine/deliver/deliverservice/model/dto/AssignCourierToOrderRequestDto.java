@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignCourierToOrderRequestDto {
-    private Long orderId;
     private Long courierId;
 }

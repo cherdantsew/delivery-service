@@ -10,5 +10,5 @@ select pdo.id,
        c.contact_info,
        c.courier_status
 from parcel_delivery_order pdo
-         left join couriers c on pdo.courier_id = couriers.id
+         left join couriers c on pdo.courier_id = c.id
     );

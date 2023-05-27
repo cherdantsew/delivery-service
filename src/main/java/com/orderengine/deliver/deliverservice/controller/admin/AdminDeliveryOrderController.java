@@ -12,13 +12,15 @@ import com.orderengine.deliver.deliverservice.service.CourierAssignService;
 import com.orderengine.deliver.deliverservice.utils.SecurityUtils;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
-@RestController("/admin/order-service/delivery-order")
+@RestController
+@RequestMapping("/admin/order-service/delivery-orders")
 public class AdminDeliveryOrderController extends AbstractDeliveryOrderController {
 
     private final AdminDeliveryOrderService deliveryOrderService;
@@ -26,30 +28,25 @@ public class AdminDeliveryOrderController extends AbstractDeliveryOrderControlle
     private final DeliveryOrderMapper mapper;
 
     public AdminDeliveryOrderController(
-            AdminDeliveryOrderService deliveryOrderService,
-            DeliveryOrderMapper mapper,
-            CourierAssignService courierAssignService, DeliveryOrderMapper mapper1) {
+        AdminDeliveryOrderService deliveryOrderService,
+        DeliveryOrderMapper mapper,
+        CourierAssignService courierAssignService, DeliveryOrderMapper mapper1) {
         super(deliveryOrderService, mapper);
         this.deliveryOrderService = deliveryOrderService;
         this.courierAssignService = courierAssignService;
         this.mapper = mapper1;
     }
 
-    @PutMapping("/change-status")
-    public DeliveryOrderResponseDto changeOrderStatus(@RequestBody ChangeOrderStatusRequestDto requestDto) {
+    @PutMapping("/{id}/change-status")
+    public DeliveryOrderResponseDto changeOrderStatus(@RequestBody ChangeOrderStatusRequestDto requestDto, @PathVariable Long id) {
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_STATUS)) {
             throw new ForbiddenException("No permission to view all orders");
         }
-        return deliveryOrderService.changeOrderStatus(requestDto);
+        return deliveryOrderService.changeOrderStatus(requestDto, id);
     }
 
-    @GetMapping("/get-all")
-    public List<DeliveryOrderResponseDto> getAllDeliveryOrders() {
-        return mapper.toDto(deliveryOrderService.findAll());
-    }
-
-    @PutMapping("/assign-courier")
-    public DeliveryOrderResponseDto assignCourier(@RequestBody AssignCourierToOrderRequestDto requestDto) {
-        return courierAssignService.assignCourierToOrder(requestDto);
+    @PutMapping("/{id}/assign-courier")
+    public DeliveryOrderResponseDto assignCourier(@PathVariable Long id, @RequestBody AssignCourierToOrderRequestDto requestDto) {
+        return courierAssignService.assignCourierToOrder(id, requestDto);
     }
 }

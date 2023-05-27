@@ -55,12 +55,12 @@ public class CourierAssignService {
     }
 
     @Transactional
-    public DeliveryOrderResponseDto assignCourierToOrder(AssignCourierToOrderRequestDto requestDto) {
+    public DeliveryOrderResponseDto assignCourierToOrder(Long id, AssignCourierToOrderRequestDto requestDto) {
         Courier courier = courierService.findOneById(requestDto.getCourierId());
         if (CourierStatus.BUSY == courier.getCourierStatus()) {
             throw new BadRequestException("You cant assign order to courier as he is delivering an order.");
         }
-        DeliveryOrder deliveryOrder = deliveryOrderService.findById(requestDto.getOrderId());
+        DeliveryOrder deliveryOrder = deliveryOrderService.findById(id);
         if (deliveryOrder.getCourier() != null && CourierStatus.BUSY == deliveryOrder.getCourier().getCourierStatus()) {
             throw new BadRequestException("You cant assign order to courier as order has a courier assigned who delivers order.");
 

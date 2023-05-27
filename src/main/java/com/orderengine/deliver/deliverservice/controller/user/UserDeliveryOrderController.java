@@ -17,18 +17,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
-@RestController("/user/order-service/delivery-order")
+@RestController
+@RequestMapping("/user/order-service/delivery-orders")
 public class UserDeliveryOrderController extends AbstractDeliveryOrderController {
 
     private final UserDeliveryOrderService deliveryOrderService;
 
     public UserDeliveryOrderController(
-            UserDeliveryOrderService deliveryOrderService,
-            DeliveryOrderMapper mapper
+        UserDeliveryOrderService deliveryOrderService,
+        DeliveryOrderMapper mapper
     ) {
         super(deliveryOrderService, mapper);
         this.deliveryOrderService = deliveryOrderService;
@@ -40,23 +42,23 @@ public class UserDeliveryOrderController extends AbstractDeliveryOrderController
         deliveryOrderService.createDeliveryOrder(requestDto);
     }
 
-    @PutMapping("/change-order-destination")
-    public void changeOrderDestination(@RequestBody @Valid ChangeDeliveryDestinationRequestDto requestDto) {
-        deliveryOrderService.changeOrderDestination(requestDto);
+    @PutMapping("/{id}/change-order-destination")
+    public void changeOrderDestination(@PathVariable Long id, @RequestBody @Valid ChangeDeliveryDestinationRequestDto requestDto) {
+        deliveryOrderService.changeOrderDestination(id, requestDto);
     }
 
-    @PutMapping("/{orderId}/cancel")
+    @PutMapping("/{id}/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelDeliveryOrder(@PathVariable Long orderId) {
-        deliveryOrderService.cancelDeliveryOrder(orderId, SecurityUtils.currentUserLoginOrException(), SecurityUtils.currentRole());
+    public void cancelDeliveryOrder(@PathVariable Long id) {
+        deliveryOrderService.cancelDeliveryOrder(id, SecurityUtils.currentUserLoginOrException(), SecurityUtils.currentRole());
     }
 
-    @GetMapping("/{orderId}/details")
-    public DeliveryOrderDetailsResponseDto getDeliveryOrderDetailed(@PathVariable Long orderId) {
-        return deliveryOrderService.getOrderDetails(orderId, SecurityUtils.currentUserLoginOrException());
+    @GetMapping("/{id}/details")
+    public DeliveryOrderDetailsResponseDto getDeliveryOrderDetailed(@PathVariable Long id) {
+        return deliveryOrderService.getOrderDetails(id, SecurityUtils.currentUserLoginOrException());
     }
 
-    @GetMapping("/get-all")
+    @Override
     public List<DeliveryOrderResponseDto> getAllDeliveryOrders() {
         return deliveryOrderService.findAllByUserLogin(SecurityUtils.currentUserLoginOrException());
     }

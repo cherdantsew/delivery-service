@@ -8,9 +8,11 @@ import com.orderengine.deliver.deliverservice.service.CourierService;
 import com.orderengine.deliver.deliverservice.utils.SecurityUtils;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/admin/order-service/courier")
+@RestController
+@RequestMapping("/admin/order-service/couriers")
 public class CourierController {
 
     private final CourierService courierService;
@@ -21,7 +23,7 @@ public class CourierController {
         this.courierMapper = courierMapper;
     }
 
-    @GetMapping("/get-all")
+    @GetMapping
     public List<CourierResponseDto> getAllCouriers() {
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.VIEW_ALL_COURIERS)) {
             throw new UnauthorizedException("You have no permission to view all couriers");

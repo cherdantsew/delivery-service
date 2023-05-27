@@ -25,8 +25,8 @@ public class UserDeliveryOrderService extends AbstractDeliveryOrderService {
         super(repository, userService, mapper);
     }
 
-    public void changeOrderDestination(ChangeDeliveryDestinationRequestDto requestDto) {
-        DeliveryOrder deliveryOrder = repository.findById(requestDto.getOrderId()).orElseThrow();
+    public void changeOrderDestination(Long id, ChangeDeliveryDestinationRequestDto requestDto) {
+        DeliveryOrder deliveryOrder = repository.findById(id).orElseThrow();
 
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_DESTINATION)) {
             throw new BadRequestException("You have no permission to change delivery destination");

@@ -13,9 +13,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangeDeliveryDestinationRequestDto {
-    @NotNull
-    @Positive
-    private Long orderId;
     @NotBlank
     private String newDestination;
 }

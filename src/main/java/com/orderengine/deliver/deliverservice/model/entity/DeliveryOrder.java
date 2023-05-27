@@ -35,6 +35,7 @@ public class DeliveryOrder {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     @JsonIgnore
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "delivered_at")
     private LocalDateTime deliveredAt;

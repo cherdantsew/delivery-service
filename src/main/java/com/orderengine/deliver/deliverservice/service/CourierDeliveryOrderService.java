@@ -30,8 +30,8 @@ public class CourierDeliveryOrderService extends AbstractDeliveryOrderService {
         );
     }
 
-    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto) {
-        DeliveryOrder deliveryOrder = repository.findByIdAndCourierLogin(requestDto.getOrderId(), SecurityUtils.currentUserLoginOrException()).orElseThrow();
+    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto, Long id) {
+        DeliveryOrder deliveryOrder = repository.findByIdAndCourierLogin(id, SecurityUtils.currentUserLoginOrException()).orElseThrow();
         deliveryOrder.setOrderStatus(requestDto.getOrderStatus());
         return mapper.toDto(repository.saveAndFlush(deliveryOrder));
     }

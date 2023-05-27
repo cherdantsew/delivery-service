@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangeOrderStatusRequestDto {
-    private Long orderId;
     private OrderStatus orderStatus;
 }

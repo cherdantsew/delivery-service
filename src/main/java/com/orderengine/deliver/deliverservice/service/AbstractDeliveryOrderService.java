@@ -61,8 +61,8 @@ public abstract class AbstractDeliveryOrderService implements IBaseEntityService
             throw new ForbiddenException("No permission to create delivery orders.");
     }
 
-    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto) {
-        DeliveryOrder deliveryOrder = repository.findById(requestDto.getOrderId()).orElseThrow();
+    public DeliveryOrderResponseDto changeOrderStatus(ChangeOrderStatusRequestDto requestDto, Long id) {
+        DeliveryOrder deliveryOrder = repository.findById(id).orElseThrow();
         deliveryOrder.setOrderStatus(requestDto.getOrderStatus());
         return mapper.toDto(repository.saveAndFlush(deliveryOrder));
     }

@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
@@ -34,7 +32,6 @@ public class SecurityConfiguration {
             .exceptionHandling()
             .authenticationEntryPoint(((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage())))
             .and()
-            .userDetailsService(userDetailsService)
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(
                     "/user/user-service/register",
@@ -43,8 +40,6 @@ public class SecurityConfiguration {
                     "/courier/user-service/authenticate",
                     "/admin/user-service/authenticate"
                 ).permitAll();
-                auth.requestMatchers("/admin/user-service/courier/**").hasRole(RolesConstants.ROLE_ADMIN.name());
-                auth.requestMatchers("/admin/user-service/register/**").hasRole(RolesConstants.ROLE_ADMIN.name());
                 auth.anyRequest().authenticated();
             })
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
