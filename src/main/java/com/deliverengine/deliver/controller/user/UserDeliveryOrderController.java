@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping("/user/order-service/delivery-orders")
+@RequestMapping("/user/deliver-service/delivery-orders")
 public class UserDeliveryOrderController extends AbstractDeliveryOrderController {
 
     private final UserDeliveryOrderService deliveryOrderService;

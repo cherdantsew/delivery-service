@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/courier/order-service/delivery-orders")
+@RequestMapping("/courier/deliver-service/delivery-orders")
 public class CourierDeliveryOrderController extends AbstractDeliveryOrderController {
 
     private final CourierDeliveryOrderService deliveryOrderService;

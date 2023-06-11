@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping("/admin/order-service/delivery-orders")
+@RequestMapping("/admin/deliver-service/delivery-orders")
 public class AdminDeliveryOrderController extends AbstractDeliveryOrderController {
 
     private final AdminDeliveryOrderService deliveryOrderService;

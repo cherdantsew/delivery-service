@@ -33,13 +33,6 @@ public class SecurityConfiguration {
             .authenticationEntryPoint(((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage())))
             .and()
             .authorizeHttpRequests(auth -> {
-                auth.requestMatchers(
-                    "/user/user-service/register",
-                    "/courier/user-service/register",
-                    "/user/user-service/authenticate",
-                    "/courier/user-service/authenticate",
-                    "/admin/user-service/authenticate"
-                ).permitAll();
                 auth.anyRequest().authenticated();
             })
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -52,8 +45,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(
-        AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
