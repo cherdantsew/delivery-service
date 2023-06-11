@@ -33,16 +33,16 @@ public class CourierDeliveryOrderController extends AbstractDeliveryOrderControl
         return deliveryOrderService.findAllByCourierLogin(SecurityUtils.currentUserLoginOrException());
     }
 
-    @PutMapping("/{id}/change-status")
-    public DeliveryOrderResponseDto changeOrderStatus(@PathVariable Long id, @RequestBody ChangeOrderStatusRequestDto requestDto) {
-        if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_STATUS)) {
-            throw new ForbiddenException("No permission to view all orders");
-        }
-        return deliveryOrderService.changeOrderStatus(requestDto, id);
-    }
-
     @Override
     public DeliveryOrderResponseDto getById(Long id) {
         return deliveryOrderService.findByIdAndCourierLogin(id, SecurityUtils.currentUserLoginOrException());
+    }
+
+    @PutMapping("/{id}/change-status")
+    public DeliveryOrderResponseDto changeOrderStatus(@RequestBody ChangeOrderStatusRequestDto requestDto, @PathVariable Long id) {
+        if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_STATUS)) {
+            throw new ForbiddenException("No permission to change delivery status");
+        }
+        return deliveryOrderService.changeOrderStatus(requestDto, id);
     }
 }

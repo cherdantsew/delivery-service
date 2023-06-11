@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/deliver-service/delivery-orders")
 public class AdminDeliveryOrderController extends AbstractDeliveryOrderController {
 
-    private final AdminDeliveryOrderService deliveryOrderService;
     private final CourierAssignService courierAssignService;
+    private final AdminDeliveryOrderService adminDeliveryOrderService;
 
     public AdminDeliveryOrderController(
         AdminDeliveryOrderService deliveryOrderService,
@@ -31,20 +31,20 @@ public class AdminDeliveryOrderController extends AbstractDeliveryOrderControlle
         CourierAssignService courierAssignService
     ) {
         super(deliveryOrderService, mapper);
-        this.deliveryOrderService = deliveryOrderService;
         this.courierAssignService = courierAssignService;
-    }
-
-    @PutMapping("/{id}/change-status")
-    public DeliveryOrderResponseDto changeOrderStatus(@RequestBody ChangeOrderStatusRequestDto requestDto, @PathVariable Long id) {
-        if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_STATUS)) {
-            throw new ForbiddenException("No permission to view all orders");
-        }
-        return deliveryOrderService.changeOrderStatus(requestDto, id);
+        this.adminDeliveryOrderService = deliveryOrderService;
     }
 
     @PutMapping("/{id}/assign-courier")
     public DeliveryOrderResponseDto assignCourier(@PathVariable Long id, @RequestBody AssignCourierToOrderRequestDto requestDto) {
         return courierAssignService.assignCourierToOrder(id, requestDto);
+    }
+
+    @PutMapping("/{id}/change-status")
+    public DeliveryOrderResponseDto changeOrderStatus(@RequestBody ChangeOrderStatusRequestDto requestDto, @PathVariable Long id) {
+        if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_STATUS)) {
+            throw new ForbiddenException("No permission to change delivery status");
+        }
+        return adminDeliveryOrderService.changeOrderStatus(requestDto, id);
     }
 }

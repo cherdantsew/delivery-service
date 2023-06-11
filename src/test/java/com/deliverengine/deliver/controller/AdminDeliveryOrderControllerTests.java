@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AdminDeliveryOrderController extends SpringBootApplicationTest {
-    private static String ADMIN_DELIVER_ORDER_URL = "/admin/deliver-service/delivery-orders";
+public class AdminDeliveryOrderControllerTests extends SpringBootApplicationTest {
+    private static final String ADMIN_DELIVER_ORDER_URL = "/admin/deliver-service/delivery-orders";
 
     @Test
     @DisplayName("should change order status")

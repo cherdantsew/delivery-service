@@ -6,8 +6,10 @@ import com.deliverengine.core.security.jwt.TokenProvider;
 import com.deliverengine.deliver.config.TestBeansConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,15 +32,23 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.apache.kafka.test.TestUtils.randomString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Import(TestBeansConfig.class)
-public class SpringBootApplicationTest extends TestPostgresContainer {
+public abstract class SpringBootApplicationTest extends TestPostgresContainer {
+
+//    @BeforeEach
+//    public void clearTables(){
+//        jdbcTemplate.execute("delete from parcel_delivery_order");
+//        jdbcTemplate.execute("delete from couriers");
+//        jdbcTemplate.execute("delete from users");
+//    }
 
     private static final String INSERT_INTO_TEMPLATE = """
         insert into %s(%s) values(%s)
         """;
+
     @Autowired
     protected MockMvc mockmvc;
     @Autowired
@@ -68,7 +78,7 @@ public class SpringBootApplicationTest extends TestPostgresContainer {
 
     private List<ImmutablePair<String, Object>> extractInsertFields(Object entity) {
         return Arrays.stream(entity.getClass().getDeclaredFields())
-            .filter(field -> field.getAnnotation(Column.class) != null)
+            .filter(field -> field.getAnnotation(Column.class) != null || field.getAnnotation(JoinColumn.class) != null)
             .filter(field -> {
                 try {
                     field.setAccessible(true);
@@ -79,6 +89,32 @@ public class SpringBootApplicationTest extends TestPostgresContainer {
             })
             .map(field -> {
                     try {
+                        if (field.getAnnotation(JoinColumn.class) != null &&
+                            StringUtils.isNotEmpty(field.getAnnotation(JoinColumn.class).name())
+                        ) {
+                            String fieldName = field.getAnnotation(JoinColumn.class).name();
+                            String referencedColumnName = field.getAnnotation(JoinColumn.class).referencedColumnName();
+                            Object referenceObject = field.get(entity);
+                            Object value = Arrays.stream(referenceObject.getClass().getDeclaredFields())
+                                .filter(refObjectField -> {
+                                    try {
+                                        refObjectField.setAccessible(true);
+                                        return refObjectField.get(referenceObject) != null;
+                                    } catch (IllegalAccessException e) {
+                                        return false;
+                                    }
+                                })
+                                .filter(referencedObjectField -> referencedObjectField.getAnnotation(Column.class) != null
+                                    && referencedObjectField.getAnnotation(Column.class).name().equals(referencedColumnName))
+                                .map(foundField -> {
+                                    try {
+                                        return foundField.get(referenceObject);
+                                    } catch (IllegalAccessException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }).findFirst().orElseThrow();
+                            return new ImmutablePair<>(fieldName, value);
+                        } else /*if (StringUtils.isNotEmpty(field.getAnnotation(Column.class).name()))*/
                         return new ImmutablePair<>(
                             StringUtils.isEmpty(field.getAnnotation(Column.class).name()) ? field.getName() : field.getAnnotation(Column.class).name(),
                             field.get(entity)
@@ -115,5 +151,11 @@ public class SpringBootApplicationTest extends TestPostgresContainer {
     public <T> T resultAsObject(MvcResult mvcResult, Class<T> clazz) throws Exception {
         String content = mvcResult.getResponse().getContentAsString();
         return objectMapper.readValue(content, clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> resultAsList(MvcResult mvcResult, Class<T> clazz) throws Exception {
+        String content = mvcResult.getResponse().getContentAsString();
+        return objectMapper.readValue(content, ArrayList.class);
     }
 }
