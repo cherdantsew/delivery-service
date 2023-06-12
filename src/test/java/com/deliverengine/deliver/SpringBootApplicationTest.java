@@ -114,7 +114,7 @@ public abstract class SpringBootApplicationTest extends TestPostgresContainer {
                                     }
                                 }).findFirst().orElseThrow();
                             return new ImmutablePair<>(fieldName, value);
-                        } else /*if (StringUtils.isNotEmpty(field.getAnnotation(Column.class).name()))*/
+                        } else
                             return new ImmutablePair<>(
                                 StringUtils.isEmpty(field.getAnnotation(Column.class).name()) ? field.getName() : field.getAnnotation(Column.class).name(),
                                 field.get(entity)

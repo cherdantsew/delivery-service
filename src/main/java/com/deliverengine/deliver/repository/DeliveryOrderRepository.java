@@ -37,7 +37,7 @@ public interface DeliveryOrderRepository extends JpaRepository<DeliveryOrder, Lo
 
 
 
-    List<DeliveryOrder> findAllByIdAndCourierLogin(Long orderId, String courierLogin);
+    Optional<DeliveryOrder> findByIdAndUserLogin(Long id, String userLogin);
 
     List<DeliveryOrder> findAllByCourierLoginAndOrderStatusNotIn(String login, List<OrderStatus> orderStatuses);
 }

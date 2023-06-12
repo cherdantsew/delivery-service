@@ -1,5 +1,6 @@
 package com.deliverengine.deliver.config;
 
+import com.deliverengine.core.exception.http.BadRequestException;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,5 +14,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = {NoSuchElementException.class})
     protected ResponseEntity<Object> handleNoSuchElementException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(value = {BadRequestException.class})
+    protected ResponseEntity<Object> handleBadRequestException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

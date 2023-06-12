@@ -44,11 +44,11 @@ public class UserDeliveryOrderController extends AbstractDeliveryOrderController
 
     @PutMapping("/{id}/change-order-destination")
     public void changeOrderDestination(@PathVariable Long id, @RequestBody @Valid ChangeDeliveryDestinationRequestDto requestDto) {
-        deliveryOrderService.changeOrderDestination(id, requestDto);
+        deliveryOrderService.changeOrderDestination(id, requestDto, SecurityUtils.currentUserLoginOrException());
     }
 
     @PutMapping("/{id}/cancel")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void cancelDeliveryOrder(@PathVariable Long id) {
         deliveryOrderService.cancelDeliveryOrder(id, SecurityUtils.currentUserLoginOrException(), SecurityUtils.currentRole());
     }

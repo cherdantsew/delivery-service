@@ -39,8 +39,8 @@ public class UserDeliveryOrderService extends AbstractDeliveryOrderService {
         userService.save(user);
     }
 
-    public void changeOrderDestination(Long id, ChangeDeliveryDestinationRequestDto requestDto) {
-        DeliveryOrder deliveryOrder = repository.findById(id).orElseThrow();
+    public void changeOrderDestination(Long id, ChangeDeliveryDestinationRequestDto requestDto, String userLogin) {
+        DeliveryOrder deliveryOrder = repository.findByIdAndUserLogin(id, userLogin).orElseThrow();
 
         if (!SecurityUtils.isCurrentUserInPermission(AuthoritiesConstants.CHANGE_DELIVERY_DESTINATION)) {
             throw new BadRequestException("You have no permission to change delivery destination");
@@ -61,7 +61,7 @@ public class UserDeliveryOrderService extends AbstractDeliveryOrderService {
             throw new BadRequestException("Delivery is in progress. Too late to cancel delivery order.");
         }
 
-        if (!Objects.equals(currentUserLogin, deliveryOrder.getUserLogin()) || RolesConstants.ROLE_ADMIN != currentUserRole) {
+        if (!Objects.equals(currentUserLogin, deliveryOrder.getUserLogin()) && RolesConstants.ROLE_ADMIN != currentUserRole) {
             throw new UnauthorizedException("You have no permission to cancel this order.");
         }
 
