@@ -11,6 +11,7 @@ import com.deliverengine.deliver.model.enumeration.CourierStatus;
 import com.deliverengine.deliver.model.enumeration.OrderStatus;
 import java.util.List;
 import java.util.Objects;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -45,7 +46,7 @@ public class CourierDeliveryOrderControllerTests extends SpringBootApplicationTe
     }
 
     @Test
-//    @DisplayName("should return all delivery orders that belong to courier")
+    @DisplayName("should return all delivery orders that belong to courier")
     public void shouldReturnDeliveryOrders() throws Exception {
         Courier courier = createCourier(CourierStatus.BUSY);
         DeliveryOrder deliveryOrder1 = createDeliveryOrder(OrderStatus.COURIER_ASSIGNED, courier);
@@ -53,24 +54,25 @@ public class CourierDeliveryOrderControllerTests extends SpringBootApplicationTe
         //should not be returned
         DeliveryOrder deliveryOrder3 = createDeliveryOrder(OrderStatus.DELIVERED, courier);
 
+        insert(courier);
         insert(deliveryOrder1);
         insert(deliveryOrder2);
         insert(deliveryOrder3);
-        insert(courier);
 
+        authenticateAndReturnToken(courier.getLogin(), RolesConstants.ROLE_COURIER, List.of(AuthoritiesConstants.CHANGE_DELIVERY_STATUS));
         MvcResult mvcResult = mockmvc.perform(
                 get(COURIER_DELIVER_ORDER_URL)
             )
             .andExpect(status().isOk())
             .andReturn();
         List<DeliveryOrderResponseDto> deliveryOrderResponseDtos = resultAsList(mvcResult, DeliveryOrderResponseDto.class);
-        assertEquals(2, deliveryOrderResponseDtos.size());
+        assertEquals(2L, deliveryOrderResponseDtos.size());
 
-        assertEquals(1, deliveryOrderResponseDtos.stream()
+        assertEquals(1L, deliveryOrderResponseDtos.stream()
             .filter(it -> Objects.equals(it.getId(), deliveryOrder1.getId()))
             .count());
 
-        assertEquals(1, deliveryOrderResponseDtos.stream()
+        assertEquals(1L, deliveryOrderResponseDtos.stream()
             .filter(it -> Objects.equals(it.getId(), deliveryOrder2.getId()))
             .count());
     }

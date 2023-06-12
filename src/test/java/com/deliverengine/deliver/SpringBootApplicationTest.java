@@ -9,13 +9,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,12 +38,12 @@ import static org.apache.kafka.test.TestUtils.randomString;
 @Import(TestBeansConfig.class)
 public abstract class SpringBootApplicationTest extends TestPostgresContainer {
 
-//    @BeforeEach
-//    public void clearTables(){
-//        jdbcTemplate.execute("delete from parcel_delivery_order");
-//        jdbcTemplate.execute("delete from couriers");
-//        jdbcTemplate.execute("delete from users");
-//    }
+    @BeforeEach
+    public void clearTables() {
+        jdbcTemplate.execute("delete from parcel_delivery_order");
+        jdbcTemplate.execute("delete from couriers");
+        jdbcTemplate.execute("delete from users");
+    }
 
     private static final String INSERT_INTO_TEMPLATE = """
         insert into %s(%s) values(%s)
@@ -115,10 +115,10 @@ public abstract class SpringBootApplicationTest extends TestPostgresContainer {
                                 }).findFirst().orElseThrow();
                             return new ImmutablePair<>(fieldName, value);
                         } else /*if (StringUtils.isNotEmpty(field.getAnnotation(Column.class).name()))*/
-                        return new ImmutablePair<>(
-                            StringUtils.isEmpty(field.getAnnotation(Column.class).name()) ? field.getName() : field.getAnnotation(Column.class).name(),
-                            field.get(entity)
-                        );
+                            return new ImmutablePair<>(
+                                StringUtils.isEmpty(field.getAnnotation(Column.class).name()) ? field.getName() : field.getAnnotation(Column.class).name(),
+                                field.get(entity)
+                            );
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
@@ -153,9 +153,11 @@ public abstract class SpringBootApplicationTest extends TestPostgresContainer {
         return objectMapper.readValue(content, clazz);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> List<T> resultAsList(MvcResult mvcResult, Class<T> clazz) throws Exception {
         String content = mvcResult.getResponse().getContentAsString();
-        return objectMapper.readValue(content, ArrayList.class);
+
+        return objectMapper.readValue(content, objectMapper.getTypeFactory().constructCollectionType(
+            List.class, objectMapper.getTypeFactory().constructType(clazz)
+        ));
     }
 }
