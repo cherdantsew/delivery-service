@@ -155,7 +155,6 @@ public abstract class SpringBootApplicationTest extends TestPostgresContainer {
 
     public <T> List<T> resultAsList(MvcResult mvcResult, Class<T> clazz) throws Exception {
         String content = mvcResult.getResponse().getContentAsString();
-
         return objectMapper.readValue(content, objectMapper.getTypeFactory().constructCollectionType(
             List.class, objectMapper.getTypeFactory().constructType(clazz)
         ));

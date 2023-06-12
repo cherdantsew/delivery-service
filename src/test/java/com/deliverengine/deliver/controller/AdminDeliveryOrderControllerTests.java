@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.deliverengine.deliver.helper.CourierHelper.createCourier;
 import static com.deliverengine.deliver.helper.DeliveryOrderHelper.createDeliveryOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,4 +61,26 @@ public class AdminDeliveryOrderControllerTests extends SpringBootApplicationTest
         assertEquals(updatedCourierId, courier.getId());
     }
 
+    @Test
+    @DisplayName("should return all delivery orders to admin")
+    public void shouldReturnDeliveryOrders() throws Exception {
+        Courier courier = createCourier(CourierStatus.BUSY);
+        DeliveryOrder deliveryOrder1 = createDeliveryOrder(OrderStatus.COURIER_ASSIGNED, courier);
+        DeliveryOrder deliveryOrder2 = createDeliveryOrder(OrderStatus.DELIVER_IN_PROGRESS, courier);
+        DeliveryOrder deliveryOrder3 = createDeliveryOrder(OrderStatus.DELIVERED, courier);
+
+        authenticateAndReturnToken(RolesConstants.ROLE_ADMIN, List.of(AuthoritiesConstants.CURRENT_USER));
+        insert(courier);
+        insert(deliveryOrder1);
+        insert(deliveryOrder2);
+        insert(deliveryOrder3);
+
+        MvcResult mvcResult = mockmvc.perform(
+                get(ADMIN_DELIVER_ORDER_URL)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+        List<DeliveryOrderResponseDto> deliveryOrderResponseDtos = resultAsList(mvcResult, DeliveryOrderResponseDto.class);
+        assertEquals(3L, deliveryOrderResponseDtos.size());
+    }
 }

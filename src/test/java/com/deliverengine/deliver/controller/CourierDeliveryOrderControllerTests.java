@@ -77,4 +77,39 @@ public class CourierDeliveryOrderControllerTests extends SpringBootApplicationTe
             .count());
     }
 
+    @Test
+    @DisplayName("should return delivery order by id")
+    public void shouldReturnOrderById() throws Exception {
+        Courier courier = createCourier(CourierStatus.BUSY);
+        DeliveryOrder deliveryOrder = createDeliveryOrder(OrderStatus.COURIER_ASSIGNED, courier);
+        insert(courier);
+        insert(deliveryOrder);
+
+        authenticateAndReturnToken(courier.getLogin(), RolesConstants.ROLE_COURIER, List.of(AuthoritiesConstants.CHANGE_DELIVERY_STATUS));
+        MvcResult mvcResult = mockmvc.perform(
+                get(COURIER_DELIVER_ORDER_URL + "/" + deliveryOrder.getId())
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+        DeliveryOrderResponseDto response = resultAsObject(mvcResult, DeliveryOrderResponseDto.class);
+        assertEquals(deliveryOrder.getId(), response.getId());
+    }
+
+    @Test
+    @DisplayName("should not return delivery order by id if order doesnt belong to courier")
+    public void shouldNotReturnOrderById() throws Exception {
+        Courier courier = createCourier(CourierStatus.BUSY);
+        Courier courier2 = createCourier(CourierStatus.FREE);
+        DeliveryOrder deliveryOrder = createDeliveryOrder(OrderStatus.COURIER_ASSIGNED, courier2);
+        insert(courier);
+        insert(courier2);
+        insert(deliveryOrder);
+
+        authenticateAndReturnToken(courier.getLogin(), RolesConstants.ROLE_COURIER, List.of(AuthoritiesConstants.CHANGE_DELIVERY_STATUS));
+        mockmvc.perform(
+                get(COURIER_DELIVER_ORDER_URL + "/" + deliveryOrder.getId())
+            )
+            .andExpect(status().isNotFound());
+    }
 }
