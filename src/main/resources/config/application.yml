@@ -4,12 +4,14 @@ spring:
     contexts: schema
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/deliver_service
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/users}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
 security:
   authentication:
     jwt:
       secret: br8dMKkzJk9Y5QPcYbBGcKngJtC3cdGK4sJwuzgc
       # 24 hours
       token-validity-in-seconds: 360000
+server:
+  port: 8082
